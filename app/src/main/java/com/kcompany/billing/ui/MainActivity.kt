@@ -1,4 +1,4 @@
-package com.kcompany.billing
+package com.kcompany.billing.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
