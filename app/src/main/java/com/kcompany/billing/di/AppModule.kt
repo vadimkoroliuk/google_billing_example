@@ -1,11 +1,11 @@
 package com.kcompany.billing.di
 
 import android.app.Application
-import com.kcompany.billing.billing.Billing
+import com.kcompany.billing.billing.BillingModule
 
 class AppModule(app: Application) {
 
-    val billing by lazy {
-        Billing(app = app)
+    val billingModule by lazy {
+        BillingModule(app = app)
     }
 }
