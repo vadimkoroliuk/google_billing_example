@@ -14,13 +14,20 @@ class BillingModule(app: Application) {
         BillingClient
             .newBuilder(app)
             .setListener(billingPurchasesUpdatedListener)
-            .enablePendingPurchases(PendingPurchasesParams.newBuilder().build())
+            .enablePendingPurchases(
+                PendingPurchasesParams.newBuilder().enablePrepaidPlans().enableOneTimeProducts()
+                    .build()
+            )
             .build()
+    }
+
+    private val billingConnector by lazy {
+        BillingConnector(billingClient = billingClient)
     }
 
     val billing by lazy {
         Billing(
-            billingConnector = BillingConnector(billingClient = billingClient),
+            billingConnector = billingConnector,
             billingPurchasesUpdatedListener = billingPurchasesUpdatedListener,
             purchaseAutoAcknowledge = PurchaseAutoAcknowledge(billingClient = billingClient),
         )

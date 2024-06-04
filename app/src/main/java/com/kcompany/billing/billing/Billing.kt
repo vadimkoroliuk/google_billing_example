@@ -1,6 +1,7 @@
 package com.kcompany.billing.billing
 
 import android.app.Activity
+import android.util.Log
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.ProductDetails
@@ -22,6 +23,10 @@ class Billing(
     private val purchaseAutoAcknowledge: PurchaseAutoAcknowledge,
 ) {
 
+    init {
+        Log.e("!!!", "Billing initialized", )
+    }
+
     private val _userState = MutableStateFlow<UserState>(value = UserState.Premium)
     val userState: StateFlow<UserState> = _userState.asStateFlow()
 
@@ -30,9 +35,11 @@ class Billing(
             billingConnector.withConnectedBillingClient()
                 .queryPurchasesAsync(
                     QueryPurchasesParams.newBuilder()
+
                         .setProductType(type)
                         .build()
                 )
+        Log.e("!!!", "getSubsPurchasesList: ${billingConnector.isConnected}", )
         return if (result.billingResult.isSuccess()) {
             result.purchasesList
         } else {
@@ -40,14 +47,14 @@ class Billing(
         }
     }
 
-    suspend fun getSubscriptionDetails(id: String, type: String): Result<ProductDetails> {
+    suspend fun getSubscriptionDetails(id: String): Result<ProductDetails> {
         val result = billingConnector.withConnectedBillingClient().queryProductDetails(
             QueryProductDetailsParams.newBuilder()
                 .setProductList(
                     listOf(
                         QueryProductDetailsParams.Product.newBuilder()
                             .setProductId(id)
-                            .setProductType(type)
+                            .setProductType(BillingClient.ProductType.SUBS)
                             .build()
                     )
                 )
@@ -66,8 +73,9 @@ class Billing(
         }
     }
 
-    suspend fun getSubsPurchases(): List<Purchase> =
-        getSubsPurchasesList(BillingClient.ProductType.SUBS)
+    suspend fun getSubsPurchases(): List<Purchase> {
+       return getSubsPurchasesList(BillingClient.ProductType.SUBS)
+    }
 
     suspend fun startBillingFlow(
         activity: Activity, productDetails: ProductDetails

@@ -12,12 +12,20 @@ android {
         applicationId = "com.kcompany.billing"
         minSdk = 29
         targetSdk = 34
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+    signingConfigs {
+        create("signingConfigRelease") {
+            keyAlias = "key0"
+            keyPassword = "f12ghrt*2!n2"
+            storeFile = file("keystore.jks")
+            storePassword = "f12ghrt*2!n2"
         }
     }
 
@@ -28,6 +36,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("signingConfigRelease")
+        }
+        debug {
+            signingConfig = signingConfigs.getByName("signingConfigRelease")
         }
     }
     compileOptions {
@@ -72,4 +84,5 @@ dependencies {
     implementation("com.android.billingclient:billing-ktx:$billing_version")
     implementation ("com.google.android.play:core:1.10.3")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
 }

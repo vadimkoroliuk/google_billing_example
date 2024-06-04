@@ -5,7 +5,6 @@ import com.kcompany.billing.billing.BillingModule
 
 class AppModule(app: Application) {
 
-    val billingModule by lazy {
-        BillingModule(app = app)
-    }
+    val billingModule = BillingModule(app = app)
+
 }
